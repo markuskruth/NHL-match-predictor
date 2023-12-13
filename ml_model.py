@@ -72,8 +72,10 @@ if __name__ == "__main__":
     #clf = LR_model(X,y)
     clf = NN_model(X,y, 2)
     data_setup.print_teams()
-    pred_data = ["TOR", "COL", "HOME"]
-    prediction = predict(clf, X_raw, pred_data)
+    pred_data = ["STL", "OTT", "HOME"]
+    prediction = predict(clf, X_raw, pred_data).tolist()[0]
+    prediction[0] = round(prediction[0], 2)
+    prediction[1] = round(prediction[1], 2)
     print("Prediction:", prediction, "\n")
     """
     while True:

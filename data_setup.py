@@ -124,15 +124,11 @@ def calculate_confidences(df, STD):
 	confidences = []
 	for p in predictions:
 		# z = (EV-p) / (STD/sqrt(n))
-		z = p / STD
+		# here we calculate the difference to a draw, which is the prediction
+		# we divide it by 2 to because we only want to go down not up (not +-, just -)
+		z = (p/2) / STD
 		confidence = norm.cdf(z)
-		difference_to_50 = abs(0.5 - confidence)
-		if confidence < 0.5:
-			fixed_confidence = confidence + difference_to_50/2
-		else:
-			fixed_confidence = confidence - difference_to_50/2
-
-		confidences.append(fixed_confidence)
+		confidences.append(confidence)
 
 	return confidences
 
