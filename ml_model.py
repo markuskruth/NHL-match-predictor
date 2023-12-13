@@ -11,8 +11,8 @@ import data_setup
 def get_X_and_y():
     df = data_setup.process_data("all_teams.csv")
 
-    X_raw = df.drop(columns = ["prediction"])
-    y = df["prediction"]
+    X_raw = df.drop(columns = ["oddsHome","oddsAway"])
+    y = df[["oddsHome","oddsAway"]]
 
     # one-hot encoding
     X = pd.get_dummies(X_raw, dtype=int)
@@ -72,6 +72,10 @@ if __name__ == "__main__":
     #clf = LR_model(X,y)
     clf = NN_model(X,y, 2)
     data_setup.print_teams()
+    pred_data = ["TOR", "COL", "HOME"]
+    prediction = predict(clf, X_raw, pred_data)
+    print("Prediction:", prediction, "\n")
+    """
     while True:
         home = input("Home: ")
         away = input("Away: ")
@@ -79,3 +83,4 @@ if __name__ == "__main__":
         prediction = predict(clf, X_raw, pred_data)
 
         print("Prediction:", prediction, "\n")
+    """
