@@ -72,7 +72,7 @@ def process_data(filename):
 			winrate_difference = team_winrates[home] - team_winrates[away]
 
 
-			predictions.append(round((goalDifference + winrate_difference + shotsOnGoalDif)/2, 2))
+			predictions.append(round((goalDifference + winrate_difference*1.25 + shotsOnGoalDif), 2))
 
 		df["prediction"] = predictions
 
@@ -122,6 +122,7 @@ def calculate_std(df):
 def calculate_confidences(df, STD):
 	predictions = df["prediction"].values.tolist()
 	confidences = []
+	# assume the predictions are following a normal distribution
 	for p in predictions:
 		# z = (EV-p) / (STD/sqrt(n))
 		# here we calculate the difference to a draw, which is the prediction

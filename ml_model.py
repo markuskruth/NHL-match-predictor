@@ -85,4 +85,4 @@ def get_odds(home, away):
 
     return prediction
 
-train_model(2)
+train_model(3)
