@@ -7,9 +7,13 @@ def process_data(filename):
 
 	columns_to_keep = ["gameId","season","playerTeam","opposingTeam","home_or_away","goalsFor","goalsAgainst","shotsOnGoalFor","shotsOnGoalAgainst","iceTime"]
 	df = df[columns_to_keep]
-	df = df[df["season"] > 2019]
-	df = df[df["iceTime"] == 3600]
+	df = df[df["season"] > 2019]	# only include the matches from 2019 onward
+	df = df[df["iceTime"] == 3600]	# only include the ending stats of each match
 	df = df.sort_values(by="season")
+
+	# Duplicate the most recent 33% of the data to give it more weight
+	recent_data = df.iloc[-int(0.33 * len(df)):].copy()
+	df = pd.concat([df, recent_data])
 
 	def calculate_normalized_team_winrates(df):
 		# collect the names of every team
@@ -52,6 +56,9 @@ def process_data(filename):
 
 		return team_winrates
 
+	# calculates a prediction-value for each match
+	# higher value to either positive or negative direction indicates a higher likelihood of winning
+	# for home (positive) or away (negative) team 
 	def calculate_predictions(df):
 		team_winrates = calculate_normalized_team_winrates(df)
 		predictions = []
@@ -81,9 +88,9 @@ def process_data(filename):
 	columns_to_keep = ["playerTeam","opposingTeam","home_or_away","prediction"]
 	df = df[columns_to_keep]
 
-	STD = calculate_std(df)
-	confidences = calculate_confidences(df, STD)
-	odds_home,odds_away = calculate_bookmarker_odds(confidences)
+	STD = calculate_std(df) 						# calculate standard deviation for the predictions-data
+	confidences = calculate_confidences(df, STD)	# and use that to calculate confidences for each matches winner to actually have won
+	odds_home,odds_away = calculate_bookmarker_odds(confidences)	# transform confidence-odds to bookmaker-odds
 	df["oddsHome"] = odds_home
 	df["oddsAway"] = odds_away
 
