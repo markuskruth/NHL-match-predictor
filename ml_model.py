@@ -37,11 +37,11 @@ def LR_model(X,y):
 
 def NN_model(X,y, layers):
     #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=2)
-    neurons = 15
+    neurons = 7
 
     hidden_layer_sizes = tuple([neurons]*layers)
 
-    mlp_regr = MLPRegressor(random_state=42, max_iter=1000, hidden_layer_sizes=hidden_layer_sizes)
+    mlp_regr = MLPRegressor(max_iter=1000, hidden_layer_sizes=hidden_layer_sizes)
     mlp_regr.fit(X, y)
 
     #y_pred = mlp_regr.predict(X_test)
@@ -85,4 +85,5 @@ def get_odds(home, away):
 
     return prediction
 
-train_model(3)
+# train the model when to program is started
+train_model(layers=2)
