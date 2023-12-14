@@ -7,7 +7,7 @@ def process_data(filename):
 
 	columns_to_keep = ["gameId","season","playerTeam","opposingTeam","home_or_away","goalsFor","goalsAgainst","shotsOnGoalFor","shotsOnGoalAgainst","iceTime"]
 	df = df[columns_to_keep]
-	df = df[df["season"] > 2018]
+	df = df[df["season"] > 2019]
 	df = df[df["iceTime"] == 3600]
 	df = df.sort_values(by="season")
 
@@ -138,7 +138,18 @@ def calculate_bookmarker_odds(confidences):
 	oddsHome = []
 	oddsAway = []
 	for p in confidences:
-		oddsHome.append((1/p))
-		oddsAway.append(1/(1-p))
+		home_odds = 1/p
+		away_odds = 1/(1-p)
+
+		# add some extra to the odds to get nearer to the real-world betting odds
+		home_ratio = home_odds / away_odds
+		away_ratio = away_odds / home_odds
+		scaler = home_ratio + away_ratio
+
+		home_odds += (home_ratio / scaler) * 0.5
+		away_odds += (away_ratio / scaler) * 0.5
+
+		oddsHome.append(home_odds)
+		oddsAway.append(away_odds)
 
 	return oddsHome, oddsAway
