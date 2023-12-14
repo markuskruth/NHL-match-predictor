@@ -9,6 +9,7 @@ def process_data(filename):
 	df = df[columns_to_keep]
 	df = df[df["season"] > 2018]
 	df = df[df["iceTime"] == 3600]
+	df = df.sort_values(by="season")
 
 	def calculate_normalized_team_winrates(df):
 		# collect the names of every team
